@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KelompokAndori">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -18,10 +19,20 @@
             android:theme="@style/Theme.KelompokAndori">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.auth.Login"
+            android:theme="@style/Theme.KelompokAndori" />
+        <activity
+            android:name=".ui.auth.Register"
+            android:theme="@style/Theme.KelompokAndori" />
+        <activity
+            android:name=".ui.home.Profile"
+            android:theme="@style/Theme.KelompokAndori" />
+
     </application>
 
 </manifest>
