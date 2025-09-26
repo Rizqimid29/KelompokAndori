@@ -27,14 +27,30 @@ class Register : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
-            var firstName by remember { mutableStateOf("") }
-            var lastName by remember { mutableStateOf("") }
-            var username by remember { mutableStateOf("") }
-            var email by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
-            var phoneNumber by remember { mutableStateOf("") }
-            var address by remember { mutableStateOf("") }
-            var dateOfBirth by remember { mutableStateOf("") }
+            var firstName by remember {
+                mutableStateOf("")
+            }
+            var lastName by remember {
+                mutableStateOf("")
+            }
+            var username by remember {
+                mutableStateOf("")
+            }
+            var email by remember {
+                mutableStateOf("")
+            }
+            var password by remember {
+                mutableStateOf("")
+            }
+            var phoneNumber by remember {
+                mutableStateOf("")
+            }
+            var address by remember {
+                mutableStateOf("")
+            }
+            var dateOfBirth by remember {
+                mutableStateOf("")
+            }
 
             Column(
                 modifier = Modifier
@@ -43,19 +59,54 @@ class Register : ComponentActivity() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextField(value = firstName, onValueChange = { firstName = it }, placeholder = { Text("First Name") })
-                TextField(value = lastName, onValueChange = { lastName = it }, placeholder = { Text("Last Name") })
-                TextField(value = username, onValueChange = { username = it }, placeholder = { Text("Username") })
-                TextField(value = email, onValueChange = { email = it }, placeholder = { Text("Email") })
+                TextField(value = firstName,
+                    onValueChange = {
+                        firstName = it },
+                    placeholder = {
+                        Text("First Name") }
+                )
+                TextField(value = lastName,
+                    onValueChange = {
+                        lastName = it },
+                    placeholder = {
+                        Text("Last Name") }
+                )
+                TextField(value = username,
+                    onValueChange = {
+                        username = it },
+                    placeholder = {
+                        Text("Username") }
+                )
+                TextField(value = email,
+                    onValueChange = {
+                        email = it },
+                    placeholder = {
+                        Text("Email") }
+                )
                 TextField(
                     value = password,
-                    onValueChange = { password = it },
-                    placeholder = { Text("Password") },
+                    onValueChange = {
+                        password = it },
+                    placeholder = {
+                        Text("Password") },
                     visualTransformation = PasswordVisualTransformation()
                 )
-                TextField(value = phoneNumber, onValueChange = { phoneNumber = it }, placeholder = { Text("Phone Number") })
-                TextField(value = address, onValueChange = { address = it }, placeholder = { Text("Address") })
-                TextField(value = dateOfBirth, onValueChange = { dateOfBirth = it }, placeholder = { Text("Date of Birth (YYYY-MM-DD)") })
+                TextField(value = phoneNumber,
+                    onValueChange = {
+                        phoneNumber = it },
+                    placeholder = { Text("Phone Number") }
+                )
+                TextField(value = address,
+                    onValueChange = {
+                        address = it },
+                    placeholder = {
+                        Text("Address") })
+                TextField(value = dateOfBirth,
+                    onValueChange = {
+                        dateOfBirth = it },
+                    placeholder = {
+                        Text("Date of Birth (YYYY-MM-DD)") }
+                )
 
                 Button(onClick = {
                     val intent = Intent(context, Profile::class.java).apply {

@@ -25,8 +25,10 @@ class Login : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
-            var username by remember { mutableStateOf("") }
-            var password by remember { mutableStateOf("") }
+            var username by remember {
+                mutableStateOf("") }
+            var password by remember {
+                mutableStateOf("") }
 
             Column(
                 modifier = Modifier
@@ -35,7 +37,12 @@ class Login : ComponentActivity() {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TextField(value = username, onValueChange = { username = it }, placeholder = { Text("Username") })
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    placeholder = {
+                        Text("Username") }
+                )
                 TextField(
                     value = password,
                     onValueChange = { password = it },
