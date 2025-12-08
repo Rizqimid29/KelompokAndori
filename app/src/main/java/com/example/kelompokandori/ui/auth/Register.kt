@@ -1,12 +1,14 @@
 package com.example.kelompokandori.ui.auth
 
+import android.adservices.ondevicepersonalization.UserData
 import android.app.Activity
-import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.kelompokandori.SupabaseClient
 import com.example.kelompokandori.ui.home.Profile
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 class Register : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -109,25 +116,35 @@ class Register : ComponentActivity() {
                 )
 
                 Button(onClick = {
-                    val intent = Intent(context, Profile::class.java).apply {
-                        putExtra("FIRST_NAME", firstName)
-                        putExtra("LAST_NAME", lastName)
-                        putExtra("USERNAME", username)
-                        putExtra("EMAIL", email)
-                        putExtra("PHONE_NUMBER", phoneNumber)
-                        putExtra("ADDRESS", address)
-                        putExtra("DATE_OF_BIRTH", dateOfBirth)
-                    }
-                    context.startActivity(intent)
+                    val scope = rememberCoroutineScope()
+                    scope.launch {
+                        try {
 
-                    var currentContext = context
-                    while (currentContext is ContextWrapper) {
-                        if (currentContext is Activity) {
-                            currentContext.finish()
-                            break
+                            val intent = Intent(context, Profile::class.java).apply {
+                                putExtra("FIRST_NAME", firstName)
+                                putExtra("LAST_NAME", lastName)
+                                putExtra("USERNAME", username)
+                                putExtra("EMAIL", email)
+                                putExtra("PHONE_NUMBER", phoneNumber)
+                                putExtra("ADDRESS", address)
+                                putExtra("DATE_OF_BIRTH", dateOfBirth)
+                            }
+                            context.startActivity(intent)
+
+                            var currentContext = context
+                            while (currentContext is ContextWrapper) {
+                                if (currentContext is Activity) {
+                                    currentContext.finish()
+                                    break
+                                }
+                                currentContext = currentContext.baseContext
+                            }
                         }
-                        currentContext = currentContext.baseContext
+
+
                     }
+
+
                 }) {
                     Text("Save")
                 }
@@ -135,3 +152,15 @@ class Register : ComponentActivity() {
         }
     }
 }
+
+@Serializable
+data class UserData (
+    val first_name: String,
+    val last_name: String,
+    val username: String,
+    val email: String,
+    val password: String,
+    val phone_number: String,
+    val address: String,
+    val date_of_birth: String
+)

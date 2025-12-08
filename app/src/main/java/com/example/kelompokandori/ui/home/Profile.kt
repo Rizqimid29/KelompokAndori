@@ -16,6 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.kelompokandori.ui.auth.Login
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.kelompokandori.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.launch
 
 class Profile : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +57,8 @@ fun ProfileScreen(
     dateOfBirth: String
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,9 +75,18 @@ fun ProfileScreen(
         Text("Date of Birth: $dateOfBirth")
         Button(
             onClick = {
-                val intent = Intent(context, Login::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                context.startActivity(intent)
+                scope.launch {
+                    try {
+                        SupabaseClient.client.auth.signOut()
+
+                        val intent = Intent(context, Login::class.java)
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
