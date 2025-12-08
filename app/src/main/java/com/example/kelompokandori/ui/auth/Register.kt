@@ -116,34 +116,34 @@ class Register : ComponentActivity() {
                 )
 
                 Button(onClick = {
-                    val scope = rememberCoroutineScope()
-                    scope.launch {
-                        try {
-
-                            val intent = Intent(context, Profile::class.java).apply {
-                                putExtra("FIRST_NAME", firstName)
-                                putExtra("LAST_NAME", lastName)
-                                putExtra("USERNAME", username)
-                                putExtra("EMAIL", email)
-                                putExtra("PHONE_NUMBER", phoneNumber)
-                                putExtra("ADDRESS", address)
-                                putExtra("DATE_OF_BIRTH", dateOfBirth)
-                            }
-                            context.startActivity(intent)
-
-                            var currentContext = context
-                            while (currentContext is ContextWrapper) {
-                                if (currentContext is Activity) {
-                                    currentContext.finish()
-                                    break
-                                }
-                                currentContext = currentContext.baseContext
-                            }
-                        }
-
-
-                    }
-
+//                    val scope = rememberCoroutineScope()
+//                    scope.launch {
+//                        try {
+//
+//                            val intent = Intent(context, Profile::class.java).apply {
+//                                putExtra("FIRST_NAME", firstName)
+//                                putExtra("LAST_NAME", lastName)
+//                                putExtra("USERNAME", username)
+//                                putExtra("EMAIL", email)
+//                                putExtra("PHONE_NUMBER", phoneNumber)
+//                                putExtra("ADDRESS", address)
+//                                putExtra("DATE_OF_BIRTH", dateOfBirth)
+//                            }
+//                            context.startActivity(intent)
+//
+//                            var currentContext = context
+//                            while (currentContext is ContextWrapper) {
+//                                if (currentContext is Activity) {
+//                                    currentContext.finish()
+//                                    break
+//                                }
+//                                currentContext = currentContext.baseContext
+//                            }
+//                        }
+//
+//
+//                    }
+//
 
                 }) {
                     Text("Save")
