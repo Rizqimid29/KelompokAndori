@@ -60,7 +60,6 @@ fun CreateArticleScreen(onFinish: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Content Input (Multi-line)
         OutlinedTextField(
             value = content,
             onValueChange = { content = it },

@@ -55,7 +55,7 @@ class Login : ComponentActivity() {
                     Text("Login")
                 }
                 TextButton(onClick = { }) {
-                    Text("Lupa Password")
+                    Text("Lupa Password?")
                 }
                 Button(onClick = {
                     context.startActivity(Intent(context, Register::class.java))
