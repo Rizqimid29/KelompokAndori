@@ -34,6 +34,12 @@
         <activity
             android:name=".ui.home.Profile"
             android:theme="@style/Theme.KelompokAndori" />
+        <activity
+            android:name=".ui.trip.TripActivity"
+            android:theme="@style/Theme.KelompokAndori" />
+        <activity
+            android:name=".ui.trip.AddTripActivity"
+            android:theme="@style/Theme.KelompokAndori" />
 
     </application>
 

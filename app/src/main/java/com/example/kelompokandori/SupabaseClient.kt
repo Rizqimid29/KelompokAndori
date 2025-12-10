@@ -3,6 +3,7 @@ package com.example.kelompokandori
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.storage.Storage
 
 object SupabaseClient {
     const val SUPABASE_URL = "https://malicufowlmvuckjthmk.supabase.co"
@@ -14,5 +15,6 @@ object SupabaseClient {
     ) {
         install(Postgrest)
         install(Auth)
+        install(Storage)
     }
 }

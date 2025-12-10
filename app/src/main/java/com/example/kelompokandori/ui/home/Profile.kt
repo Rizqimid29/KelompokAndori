@@ -6,18 +6,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer // Tambahan Import
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth // Tambahan Import
+import androidx.compose.foundation.layout.height // Tambahan Import
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.kelompokandori.ui.auth.Login
-import androidx.compose.runtime.rememberCoroutineScope
 import com.example.kelompokandori.SupabaseClient
+import com.example.kelompokandori.ui.auth.Login
+import com.example.kelompokandori.ui.trip.TripActivity // Tambahan Import: Pastikan TripActivity sudah dibuat
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 
@@ -73,6 +77,8 @@ fun ProfileScreen(
         Text("Phone Number: $phoneNumber")
         Text("Address: $address")
         Text("Date of Birth: $dateOfBirth")
+
+        // --- Tombol Logout ---
         Button(
             onClick = {
                 scope.launch {
@@ -88,9 +94,25 @@ fun ProfileScreen(
                     }
                 }
             },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth() // Opsional: Agar tombol logout juga lebar
+                .padding(vertical = 8.dp)
         ) {
             Text("Logout")
+        }
+
+        // --- TAMBAHAN LANGKAH 12: Tombol Trip Planner ---
+        Spacer(modifier = Modifier.height(16.dp)) // Jarak antar tombol
+
+        Button(
+            onClick = {
+                // Navigasi ke TripActivity
+                context.startActivity(Intent(context, TripActivity::class.java))
+            },
+            modifier = Modifier.fillMaxWidth() // Agar tombol selebar layar
+        ) {
+            Text("Lihat Rencana Perjalanan (Trip Planner)")
         }
     }
 }
