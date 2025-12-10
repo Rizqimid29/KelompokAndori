@@ -22,7 +22,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Aplikasi Pariwisata") })
+            TopAppBar(title = { Text("Mau ke mana hari ini?") })
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues).fillMaxSize()) {
