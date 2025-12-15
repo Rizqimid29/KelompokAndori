@@ -9,15 +9,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.kelompokandori.SupabaseClient
 import com.example.kelompokandori.model.ArticleComment
 import com.example.kelompokandori.ui.theme.KelompokAndoriTheme
@@ -34,18 +37,18 @@ class ArticleDetailActivity : ComponentActivity() {
         val articleId = intent.getLongExtra("ARTICLE_ID", -1L)
         val title = intent.getStringExtra("ARTICLE_TITLE") ?: ""
         val content = intent.getStringExtra("ARTICLE_CONTENT") ?: ""
-        val date = intent.getStringExtra("ARTICLE_DATE") ?: ""
+        val imageUrl = intent.getStringExtra("ARTICLE_IMAGE")
 
         setContent {
             KelompokAndoriTheme {
-                ArticleDetailScreen(articleId, title, content)
+                ArticleDetailScreen(articleId, title, content, imageUrl)
             }
         }
     }
 }
 
 @Composable
-fun ArticleDetailScreen(articleId: Long, title: String, content: String) {
+fun ArticleDetailScreen(articleId: Long, title: String, content: String, imageUrl: String?) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -88,6 +91,19 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String) {
             contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             item {
+                if (imageUrl != null) {
+                    AsyncImage(
+                        model = imageUrl,
+                        contentDescription = "Cover Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(12.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
                 Text(text = title, style = MaterialTheme.typography.headlineLarge)
                 Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
@@ -162,7 +178,7 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String) {
                 },
                 enabled = commentText.isNotBlank()
             ) {
-                Icon(Icons.Default.Send, contentDescription = "Kirim", tint = MaterialTheme.colorScheme.primary)
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Kirim", tint = MaterialTheme.colorScheme.primary)
             }
         }
     }

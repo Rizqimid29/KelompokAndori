@@ -2,7 +2,6 @@ package com.example.kelompokandori.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
 @Serializable
 data class Article(
     val id: Long? = null,
@@ -14,5 +13,8 @@ data class Article(
     val content: String,
 
     @SerialName("user_id")
-    val userId: String
+    val userId: String,
+
+    @SerialName("image_url")
+    val imageUrl: String? = null
 )
