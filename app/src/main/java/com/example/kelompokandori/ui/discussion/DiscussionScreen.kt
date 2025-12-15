@@ -207,7 +207,7 @@ fun CommentItem(comment: Comment, onReply: (Comment) -> Unit) {
         CommentBubble(comment, onReply)
 
         if (comment.replies.isNotEmpty()) {
-            Column(Modifier.padding(start = 32.dp, top = 8.dp)) { // Indentasi Child
+            Column(Modifier.padding(start = 32.dp, top = 8.dp)) {
                 comment.replies.forEach { reply ->
                     CommentBubble(reply, onReply)
                     Spacer(Modifier.height(8.dp))
