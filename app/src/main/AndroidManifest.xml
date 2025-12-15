@@ -26,9 +26,6 @@
         </activity>
 
         <activity
-            android:name=".ui.auth.Login"
-            android:theme="@style/Theme.KelompokAndori" />
-        <activity
             android:name=".ui.auth.Register"
             android:theme="@style/Theme.KelompokAndori" />
         <activity

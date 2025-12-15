@@ -20,7 +20,6 @@ import com.example.kelompokandori.ui.article.ArticleListScreen
 import com.example.kelompokandori.ui.home.ProfileScreen
 import com.example.kelompokandori.ui.trip.TripListScreen
 
-// 1. Model untuk Item Navbar
 sealed class BottomNavItem(val route: String, val title: String, val icon: ImageVector) {
     object Trip : BottomNavItem("trip", "Trip", Icons.Default.Place)
     object Review : BottomNavItem("review", "Review", Icons.Default.Star)
@@ -29,12 +28,10 @@ sealed class BottomNavItem(val route: String, val title: String, val icon: Image
     object Profile : BottomNavItem("profile", "Profile", Icons.Default.Person)
 }
 
-// 2. Composable Utama dengan Navbar
 @Composable
 fun MainScreen(onLogout: () -> Unit) {
     val navController = rememberNavController()
 
-    // Daftar menu
     val items = listOf(
         BottomNavItem.Trip,
         BottomNavItem.Review,
@@ -73,7 +70,6 @@ fun MainScreen(onLogout: () -> Unit) {
             startDestination = BottomNavItem.Trip.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // --- FITUR 1: TRIP ---
             composable(BottomNavItem.Trip.route) {
                 TripListScreen(
                     onNavigateToAdd = {
@@ -85,36 +81,22 @@ fun MainScreen(onLogout: () -> Unit) {
                 )
             }
 
-            // --- FITUR 2: REVIEW ---
             composable(BottomNavItem.Review.route) {
                 // Ganti dengan screen Review kamu nanti
                 PlaceholderScreen("Fitur Review")
             }
 
-            // --- FITUR 3: ARTICLE ---
             composable(BottomNavItem.Article.route) {
                 ArticleListScreen()
             }
 
-            // --- FITUR 4: DISCUSS ---
             composable(BottomNavItem.Discuss.route) {
                 // Ganti dengan screen Discuss kamu nanti
                 PlaceholderScreen("Fitur Diskusi")
             }
 
-            // --- FITUR 5: PROFIL ---
             composable(BottomNavItem.Profile.route) {
-                // Untuk sementara pakai dummy data agar tidak error
-                ProfileScreen(
-                    firstName = "User",
-                    lastName = "Pengguna",
-                    username = "user123",
-                    email = "email@contoh.com",
-                    phoneNumber = "-",
-                    address = "-",
-                    dateOfBirth = "-"
-                )
-                // Nanti bisa tambahkan tombol logout di dalam ProfileScreen yang memanggil onLogout()
+                ProfileScreen()
             }
         }
     }
