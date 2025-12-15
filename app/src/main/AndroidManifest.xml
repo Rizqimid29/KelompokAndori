@@ -41,6 +41,9 @@
             android:name=".ui.trip.AddTripActivity"
             android:theme="@style/Theme.KelompokAndori" />
 
+        <activity android:name=".ui.article.ArticleListActivity" />
+        <activity android:name=".ui.article.CreateArticleActivity" />
+        <activity android:name=".ui.article.ArticleDetailActivity" />
     </application>
 
 </manifest>
