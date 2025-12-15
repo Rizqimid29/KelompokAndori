@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.kelompokandori.ui.article.ArticleListScreen
 import com.example.kelompokandori.ui.home.ProfileScreen
 import com.example.kelompokandori.ui.trip.TripListScreen
+import com.example.kelompokandori.ui.discussion.DiscussionScreen
 
 sealed class BottomNavItem(val route: String, val title: String, val icon: ImageVector) {
     object Trip : BottomNavItem("trip", "Trip", Icons.Default.Place)
@@ -91,8 +92,7 @@ fun MainScreen(onLogout: () -> Unit) {
             }
 
             composable(BottomNavItem.Discuss.route) {
-                // Ganti dengan screen Discuss kamu nanti
-                PlaceholderScreen("Fitur Diskusi")
+                DiscussionScreen()
             }
 
             composable(BottomNavItem.Profile.route) {
