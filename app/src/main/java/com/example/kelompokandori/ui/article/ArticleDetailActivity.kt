@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.kelompokandori.SupabaseClient
 import com.example.kelompokandori.model.ArticleComment
 import com.example.kelompokandori.ui.theme.KelompokAndoriTheme
@@ -27,6 +25,7 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Order
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.jsonPrimitive
 
 class ArticleDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,14 +38,14 @@ class ArticleDetailActivity : ComponentActivity() {
 
         setContent {
             KelompokAndoriTheme {
-                ArticleDetailScreen(articleId, title, content, date)
+                ArticleDetailScreen(articleId, title, content)
             }
         }
     }
 }
 
 @Composable
-fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: String) {
+fun ArticleDetailScreen(articleId: Long, title: String, content: String) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -62,9 +61,7 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
                 val results = SupabaseClient.client
                     .from("article_comments")
                     .select {
-                        filter {
-                            eq("article_id", articleId)
-                        }
+                        filter { eq("article_id", articleId) }
                         order("created_at", order = Order.DESCENDING)
                     }
                     .decodeList<ArticleComment>()
@@ -86,7 +83,6 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
             .fillMaxSize()
             .padding(16.dp)
     ) {
-
         LazyColumn(
             modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(bottom = 16.dp)
@@ -94,7 +90,6 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
             item {
                 Text(text = title, style = MaterialTheme.typography.headlineLarge)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Diposting pada: $date", style = MaterialTheme.typography.labelMedium)
                 HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                 Text(text = content, style = MaterialTheme.typography.bodyLarge)
 
@@ -107,11 +102,10 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // --- Comment List ---
             if (isLoadingComments) {
                 item { CircularProgressIndicator(modifier = Modifier.padding(16.dp)) }
             } else if (commentsList.isEmpty()) {
-                item { Text("Belum ada komentar. Jadilah yang pertama!", color = Color.Gray) }
+                item { Text("Belum ada komentar.", color = Color.Gray) }
             } else {
                 items(commentsList) { comment ->
                     CommentItem(comment)
@@ -119,7 +113,6 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
             }
         }
 
-        // --- Input Field (Sticks to bottom) ---
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -148,10 +141,13 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
                                 return@launch
                             }
 
+                            val fullName = user.userMetadata?.get("full_name")?.jsonPrimitive?.content ?: "User"
+
                             val newComment = ArticleComment(
                                 content = commentText,
                                 articleId = articleId,
-                                userId = user.id
+                                userId = user.id,
+                                userName = fullName
                             )
 
                             SupabaseClient.client.from("article_comments").insert(newComment)
@@ -160,13 +156,13 @@ fun ArticleDetailScreen(articleId: Long, title: String, content: String, date: S
                             fetchComments()
 
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Gagal kirim: ${e.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Gagal: ${e.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
                 enabled = commentText.isNotBlank()
             ) {
-                Icon(Icons.Default.Send, contentDescription = "Send", tint = MaterialTheme.colorScheme.primary)
+                Icon(Icons.Default.Send, contentDescription = "Kirim", tint = MaterialTheme.colorScheme.primary)
             }
         }
     }
@@ -182,10 +178,12 @@ fun CommentItem(comment: ArticleComment) {
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                text = "User: ${comment.userId?.take(5)}...",
-                style = MaterialTheme.typography.labelSmall,
+                text = comment.userName ?: "Anonymous",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = comment.content,
                 style = MaterialTheme.typography.bodyMedium

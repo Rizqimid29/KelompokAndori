@@ -14,6 +14,9 @@ data class ArticleComment(
     @SerialName("user_id")
     val userId: String? = null,
 
+    @SerialName("user_name")
+    val userName: String? = "Anonymous",
+
     @SerialName("created_at")
     val createdAt: String? = null
 )
