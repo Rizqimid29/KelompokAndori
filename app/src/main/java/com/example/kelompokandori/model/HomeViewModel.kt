@@ -1,12 +1,14 @@
 package com.example.kelompokandori.model
 
-import com.example.kelompokandori.model.Destination
-import DestinationRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kelompokandori.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.example.kelompokandori.model.Destination
+import DestinationRepository
 
 class HomeViewModel : ViewModel() {
     private val repository = DestinationRepository()
@@ -27,6 +29,17 @@ class HomeViewModel : ViewModel() {
             val data = repository.getDestinations()
             _destinations.value = data
             _isLoading.value = false
+        }
+    }
+
+    fun logout(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                SupabaseClient.client.auth.signOut()
+                onSuccess()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }
