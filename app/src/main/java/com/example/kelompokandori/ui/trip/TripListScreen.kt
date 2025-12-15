@@ -1,42 +1,41 @@
 package com.example.kelompokandori.ui.trip
 
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kelompokandori.model.Trip
 
 @Composable
 fun TripListScreen(
     viewModel: TripViewModel = viewModel(),
-    onNavigateToAdd: () -> Unit
+    onNavigateToAdd: (Trip?) -> Unit
 ) {
-    // Panggil data saat pertama kali dibuka
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         viewModel.getTrips()
     }
 
-
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateToAdd) { // <--- Panggil di sini
+            FloatingActionButton(
+                onClick = { onNavigateToAdd(null) }, // null = Tambah Baru
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Trip")
             }
         }
@@ -45,10 +44,9 @@ fun TripListScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5)) // Background abu-abu muda
+                .background(Color(0xFFF5F5F5))
                 .padding(16.dp)
         ) {
-
             Text(
                 text = "My Trips",
                 style = MaterialTheme.typography.headlineMedium,
@@ -56,17 +54,36 @@ fun TripListScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            // Tampilkan Loading Indicator jika sedang memuat data
             if (viewModel.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
 
-            // LAZY LIST untuk menampilkan daftar trip
+            if (viewModel.errorMessage.isNotEmpty()) {
+                Text(
+                    text = viewModel.errorMessage,
+                    color = Color.Red,
+                    modifier = Modifier.padding(8.dp)
+                )
+            }
+
             LazyColumn {
                 items(viewModel.trips) { trip ->
-                    // Memanggil komponen kartu yang sudah dibuat di TripItem.kt
-                    // Karena berada di package yang sama, tidak perlu di-import manual
-                    TripCard(trip = trip)
+                    TripCard(
+                        trip = trip,
+                        onEditClick = { selectedTrip ->
+                            onNavigateToAdd(selectedTrip)
+                        },
+                        onDeleteClick = { selectedTrip ->
+                            if (selectedTrip.id != null) {
+                                viewModel.deleteTrip(selectedTrip.id)
+                                Toast.makeText(context, "Trip dihapus", Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, "Error: ID Trip tidak valid", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
                 }
             }
         }

@@ -172,31 +172,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
                 value = email
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // --- TOMBOL NAVIGASI LAIN ---
-            OutlinedButton(
-                onClick = {
-                    context.startActivity(Intent(context, TripActivity::class.java))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("Rencana Perjalanan (Trip Planner)")
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedButton(
-                onClick = {
-                    context.startActivity(Intent(context, ArticleListActivity::class.java))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("Tips & Pengalaman Wisata")
-            }
-
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
