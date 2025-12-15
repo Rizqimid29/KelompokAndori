@@ -61,6 +61,7 @@ fun ArticleListScreen(viewModel: ArticleViewModel = viewModel()) {
                     items(articles) { article ->
                         ArticleItem(article) {
                             val intent = Intent(context, ArticleDetailActivity::class.java)
+                            intent.putExtra("ARTICLE_ID", article.id) // <--- ADD THIS LINE
                             intent.putExtra("ARTICLE_TITLE", article.title)
                             intent.putExtra("ARTICLE_CONTENT", article.content)
                             intent.putExtra("ARTICLE_DATE", article.createdAt)
