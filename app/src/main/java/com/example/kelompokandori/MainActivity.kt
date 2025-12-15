@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kelompokandori.ui.MainScreen
 import com.example.kelompokandori.ui.auth.AuthScreen
-import com.example.kelompokandori.ui.home.HomeScreen
 import io.github.jan.supabase.auth.auth
 
 class MainActivity : ComponentActivity() {
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable("home") {
-                            HomeScreen(
+                            MainScreen(
                                 onLogout = {
                                     navController.navigate("auth") {
                                         popUpTo("home") { inclusive = true }
