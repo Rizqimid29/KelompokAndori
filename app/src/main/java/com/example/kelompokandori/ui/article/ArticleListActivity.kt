@@ -41,6 +41,11 @@ fun ArticleListScreen(viewModel: ArticleViewModel = viewModel()) {
     val isLoading by viewModel.isLoading.collectAsState()
     val context = LocalContext.current
 
+    // Panggil ulang fetch saat halaman dibuka untuk memastikan data fresh
+    LaunchedEffect(Unit) {
+        viewModel.fetchArticles()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Tips & Pengalaman") })
@@ -56,12 +61,22 @@ fun ArticleListScreen(viewModel: ArticleViewModel = viewModel()) {
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else if (articles.isEmpty()) {
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("Belum ada artikel.", style = MaterialTheme.typography.bodyLarge)
+                    Button(onClick = { viewModel.fetchArticles() }) {
+                        Text("Refresh")
+                    }
+                }
             } else {
                 LazyColumn(contentPadding = PaddingValues(16.dp)) {
                     items(articles) { article ->
                         ArticleItem(article) {
                             val intent = Intent(context, ArticleDetailActivity::class.java)
-                            intent.putExtra("ARTICLE_ID", article.id) // <--- ADD THIS LINE
+                            intent.putExtra("ARTICLE_ID", article.id ?: -1L)
                             intent.putExtra("ARTICLE_TITLE", article.title)
                             intent.putExtra("ARTICLE_CONTENT", article.content)
                             intent.putExtra("ARTICLE_DATE", article.createdAt)
