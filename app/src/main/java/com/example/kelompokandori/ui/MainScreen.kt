@@ -20,6 +20,7 @@ import com.example.kelompokandori.ui.article.ArticleListScreen
 import com.example.kelompokandori.ui.home.ProfileScreen
 import com.example.kelompokandori.ui.trip.TripListScreen
 import com.example.kelompokandori.ui.discussion.DiscussionScreen
+import com.example.kelompokandori.ui.review.AddReviewScreen
 
 sealed class BottomNavItem(val route: String, val title: String, val icon: ImageVector) {
     object Trip : BottomNavItem("trip", "Trip", Icons.Default.Place)
@@ -83,8 +84,7 @@ fun MainScreen(onLogout: () -> Unit) {
             }
 
             composable(BottomNavItem.Review.route) {
-                // Ganti dengan screen Review kamu nanti
-                PlaceholderScreen("Fitur Review")
+                AddReviewScreen()
             }
 
             composable(BottomNavItem.Article.route) {
