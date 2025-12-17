@@ -98,22 +98,6 @@ fun TripCard(
                     onDismissRequest = { expanded = false },
                     modifier = Modifier.background(Color.White)
                 ) {
-                    DropdownMenuItem(
-                        text = { Text("Edit") },
-                        leadingIcon = { Icon(Icons.Default.Edit, contentDescription = null) },
-                        onClick = {
-                            expanded = false
-                            onEditClick(trip)
-                        }
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Hapus") },
-                        leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = Color.Red) },
-                        onClick = {
-                            expanded = false
-                            onDeleteClick(trip)
-                        }
-                    )
                 }
             }
         }

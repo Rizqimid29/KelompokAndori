@@ -76,12 +76,6 @@ fun TripListScreen(
                             onNavigateToAdd(selectedTrip)
                         },
                         onDeleteClick = { selectedTrip ->
-                            if (selectedTrip.id != null) {
-                                viewModel.deleteTrip(selectedTrip.id)
-                                Toast.makeText(context, "Trip dihapus", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(context, "Error: ID Trip tidak valid", Toast.LENGTH_SHORT).show()
-                            }
                         }
                     )
                 }

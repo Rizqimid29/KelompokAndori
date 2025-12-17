@@ -19,7 +19,6 @@ class TripActivity : ComponentActivity() {
                 val viewModel: TripViewModel = viewModel()
                 val lifecycleOwner = LocalLifecycleOwner.current
 
-                // Fitur Auto-Refresh: Ambil data ulang saat kembali ke halaman ini
                 DisposableEffect(lifecycleOwner) {
                     val observer = LifecycleEventObserver { _, event ->
                         if (event == Lifecycle.Event.ON_RESUME) {
@@ -35,7 +34,6 @@ class TripActivity : ComponentActivity() {
                 TripListScreen(
                     viewModel = viewModel,
                     onNavigateToAdd = {
-                        // Pindah ke halaman Tambah Trip
                         startActivity(Intent(this, AddTripActivity::class.java))
                     }
                 )

@@ -64,76 +64,10 @@ class TripViewModel : ViewModel() {
                 )
 
                 SupabaseClient.client.from("trips").insert(newTrip)
-                getTrips() // Refresh otomatis
+                getTrips()
 
             } catch (e: Exception) {
                 errorMessage = "Gagal simpan: ${e.message}"
-                e.printStackTrace()
-            } finally {
-                isLoading = false
-            }
-        }
-    }
-
-    fun deleteTrip(tripId: Long) {
-        viewModelScope.launch {
-            try {
-                isLoading = true
-                // Hapus di Supabase
-                SupabaseClient.client.from("trips").delete {
-                    filter {
-                        eq("id", tripId)
-                    }
-                }
-                _trips.removeIf { it.id == tripId }
-            } catch (e: Exception) {
-                errorMessage = "Gagal hapus: ${e.message}"
-                e.printStackTrace()
-            } finally {
-                isLoading = false
-            }
-        }
-    }
-
-    fun updateTrip(
-        id: Long,
-        destination: String,
-        startDate: String,
-        endDate: String,
-        description: String,
-        imageByteArray: ByteArray?,
-        currentImageUrl: String?
-    ) {
-        viewModelScope.launch {
-            try {
-                isLoading = true
-                var finalImageUrl = currentImageUrl
-
-                if (imageByteArray != null) {
-                    val fileName = "trip_${UUID.randomUUID()}.jpg"
-                    val bucket = SupabaseClient.client.storage.from("trip-images")
-                    bucket.upload(fileName, imageByteArray)
-                    finalImageUrl = bucket.publicUrl(fileName)
-                }
-
-                val updatedTrip = Trip(
-                    id = id,
-                    userId = SupabaseClient.client.auth.currentUserOrNull()?.id ?: "",
-                    destination = destination,
-                    startDate = startDate,
-                    endDate = endDate,
-                    description = description,
-                    imageUrl = finalImageUrl
-                )
-
-                SupabaseClient.client.from("trips").update(updatedTrip) {
-                    filter {
-                        eq("id", id)
-                    }
-                }
-                getTrips()
-            } catch (e: Exception) {
-                errorMessage = "Gagal update: ${e.message}"
                 e.printStackTrace()
             } finally {
                 isLoading = false

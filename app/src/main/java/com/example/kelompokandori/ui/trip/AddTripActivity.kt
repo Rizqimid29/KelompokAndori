@@ -54,7 +54,6 @@ fun AddTripScreen(onFinish: () -> Unit) {
     ) { uri: Uri? ->
         uri?.let {
             imageUri = it
-            // Konversi URI ke ByteArray untuk diupload
             val inputStream = context.contentResolver.openInputStream(it)
             imageByteArray = inputStream?.readBytes()
         }
@@ -69,7 +68,6 @@ fun AddTripScreen(onFinish: () -> Unit) {
     ) {
         Text("Rencanakan Perjalananmu", style = MaterialTheme.typography.headlineMedium)
 
-        // Input Gambar
         Box(
             modifier = Modifier.fillMaxWidth().height(200.dp),
             contentAlignment = Alignment.Center

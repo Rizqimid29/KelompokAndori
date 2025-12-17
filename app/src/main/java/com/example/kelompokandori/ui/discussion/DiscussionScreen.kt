@@ -81,7 +81,7 @@ fun DiscussionList(
             ) {
                 item {
                     Text("Discussion Board", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-                    Text("Tempat berbagi cerita wisata", color = Color.Gray)
+                    Text("Tempat berbagi pertanyaan seputar wisata", color = Color.Gray)
                 }
                 items(threads) { thread ->
                     ThreadCard(thread, onClick = { onThreadClick(thread) })
