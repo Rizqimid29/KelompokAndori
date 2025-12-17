@@ -1,7 +1,7 @@
 package com.example.kelompokandori.data
 
 import com.example.kelompokandori.SupabaseClient
-import com.example.kelompokandori.model.Comment
+import com.example.kelompokandori.model.DiscussionComment
 import com.example.kelompokandori.model.Discussion
 import com.example.kelompokandori.ui.home.UserProfile
 import io.github.jan.supabase.auth.auth
@@ -47,13 +47,13 @@ class DiscussionRepository {
         SupabaseClient.client.from("discussion_threads").insert(thread)
     }
 
-    suspend fun getComments(threadId: String): List<Comment> {
+    suspend fun getComments(threadId: String): List<DiscussionComment> {
         return SupabaseClient.client.from("discussion_comments")
             .select {
                 filter { eq("thread_id", threadId) }
                 order("created_at", Order.ASCENDING)
             }
-            .decodeList<Comment>()
+            .decodeList<DiscussionComment>()
     }
 
     suspend fun postComment(
@@ -64,7 +64,7 @@ class DiscussionRepository {
     ) {
         val user = getCurrentUserProfile()
 
-        val comment = Comment(
+        val comment = DiscussionComment(
             threadId = threadId,
             parentId = parentId,
             rootId = rootId,

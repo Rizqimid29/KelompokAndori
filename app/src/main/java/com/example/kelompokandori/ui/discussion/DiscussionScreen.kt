@@ -1,7 +1,6 @@
 package com.example.kelompokandori.ui.discussion
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.kelompokandori.model.Comment
+import com.example.kelompokandori.model.DiscussionComment
 import com.example.kelompokandori.model.Discussion
 import com.example.kelompokandori.model.DiscussionViewModel
 
@@ -164,7 +163,7 @@ fun DiscussionDetail(
         LazyColumn(Modifier.padding(padding).fillMaxSize(), contentPadding = PaddingValues(16.dp)) {
             item {
                 Button(onClick = onBack, colors = ButtonDefaults.textButtonColors()) { Text("< Back", color = DiscussionBlue) }
-                ThreadCard(thread, onClick = {}) // Card tanpa Like
+                ThreadCard(thread, onClick = {})
                 Divider(Modifier.padding(vertical = 16.dp))
                 Text("${comments.fold(0) { acc, c -> acc + 1 + c.replies.size }} Comments", fontWeight = FontWeight.Bold)
                 Spacer(Modifier.height(16.dp))
@@ -202,7 +201,7 @@ fun ThreadCard(thread: Discussion, onClick: () -> Unit) {
 }
 
 @Composable
-fun CommentItem(comment: Comment, onReply: (Comment) -> Unit) {
+fun CommentItem(comment: DiscussionComment, onReply: (DiscussionComment) -> Unit) {
     Column(Modifier.padding(vertical = 8.dp)) {
         CommentBubble(comment, onReply)
 
@@ -218,9 +217,8 @@ fun CommentItem(comment: Comment, onReply: (Comment) -> Unit) {
 }
 
 @Composable
-fun CommentBubble(comment: Comment, onReply: (Comment) -> Unit) {
+fun CommentBubble(comment: DiscussionComment, onReply: (DiscussionComment) -> Unit) {
     Row(verticalAlignment = Alignment.Top) {
-        // Avatar
         if (comment.userAvatar != null) {
             AsyncImage(
                 model = comment.userAvatar, contentDescription = null,

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Comment(
+data class DiscussionComment(
     val id: String? = null,
     @SerialName("thread_id") val threadId: String,
     @SerialName("parent_id") val parentId: String? = null,
@@ -15,5 +15,5 @@ data class Comment(
     val content: String,
     @SerialName("created_at") val createdAt: String? = null,
 
-    val replies: List<Comment> = emptyList()
+    val replies: List<DiscussionComment> = emptyList()
 )

@@ -13,13 +13,13 @@ class DiscussionViewModel : ViewModel() {
     private val _threads = MutableStateFlow<List<Discussion>>(emptyList())
     val threads = _threads.asStateFlow()
 
-    private val _comments = MutableStateFlow<List<Comment>>(emptyList())
+    private val _comments = MutableStateFlow<List<DiscussionComment>>(emptyList())
     val comments = _comments.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _replyingTo = MutableStateFlow<Comment?>(null)
+    private val _replyingTo = MutableStateFlow<DiscussionComment?>(null)
     val replyingTo = _replyingTo.asStateFlow()
 
     init {
@@ -92,7 +92,7 @@ class DiscussionViewModel : ViewModel() {
         }
     }
 
-    fun setReplyingTo(comment: Comment?) {
+    fun setReplyingTo(comment: DiscussionComment?) {
         _replyingTo.value = comment
     }
 }
