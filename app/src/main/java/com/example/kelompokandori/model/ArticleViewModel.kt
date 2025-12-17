@@ -1,14 +1,14 @@
 package com.example.kelompokandori.model
 
 import androidx.lifecycle.ViewModel
-        import androidx.lifecycle.viewModelScope
-        import com.example.kelompokandori.SupabaseClient
-        import io.github.jan.supabase.auth.auth
-        import io.github.jan.supabase.postgrest.from
-        import io.github.jan.supabase.postgrest.query.Order
-        import kotlinx.coroutines.flow.MutableStateFlow
-        import kotlinx.coroutines.flow.StateFlow
-        import kotlinx.coroutines.launch
+import androidx.lifecycle.viewModelScope
+import com.example.kelompokandori.SupabaseClient
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Order
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class ArticleViewModel : ViewModel() {
     private val _articles = MutableStateFlow<List<Article>>(emptyList())
