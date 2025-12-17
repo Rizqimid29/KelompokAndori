@@ -33,7 +33,7 @@ fun TripListScreen(
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onNavigateToAdd(null) }, // null = Tambah Baru
+                onClick = { onNavigateToAdd(null) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add Trip")

@@ -47,8 +47,7 @@ fun AddTripScreen(onFinish: () -> Unit) {
     var endDate by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var imageByteArray by remember { mutableStateOf<ByteArray?>(null) }
-
-    // Launcher untuk memilih gambar dari galeri
+    
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->

@@ -75,7 +75,6 @@ fun MainScreen(onLogout: () -> Unit) {
             composable(BottomNavItem.Trip.route) {
                 TripListScreen(
                     onNavigateToAdd = {
-                        // Panggil Activity AddTripActivity
                         navController.context.startActivity(
                             android.content.Intent(navController.context, com.example.kelompokandori.ui.trip.AddTripActivity::class.java)
                         )
