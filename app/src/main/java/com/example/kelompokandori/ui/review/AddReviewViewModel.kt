@@ -48,20 +48,41 @@ class AddReviewViewModel(
         val state = _uiState.value
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isSubmitting = true) }
+            _uiState.update {
+                it.copy(
+                    isSubmitting = true,
+                    errorMessage = null,
+                    isSuccess = false
+                )
+            }
 
-            repository.addReview(
-                kebersihan = state.kebersihan,
-                pelayanan = state.pelayanan,
-                lokasi = state.lokasi,
-                kenyamanan = state.kenyamanan,
-                pengalaman = state.pengalaman,
-                tipeTrip = state.tipeTrip,
-                mediaUri = state.mediaUri,
-                mediaType = state.mediaType?.name
-            )
+            try {
+                repository.addReview(
+                    kebersihan = state.kebersihan,
+                    pelayanan = state.pelayanan,
+                    lokasi = state.lokasi,
+                    kenyamanan = state.kenyamanan,
+                    pengalaman = state.pengalaman,
+                    tipeTrip = state.tipeTrip,
+                    mediaUri = state.mediaUri,
+                    mediaType = state.mediaType?.name
+                )
 
-            _uiState.update { it.copy(isSubmitting = false) }
+                _uiState.update {
+                    it.copy(
+                        isSubmitting = false,
+                        isSuccess = true
+                    )
+                }
+
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        isSubmitting = false,
+                        errorMessage = e.message ?: "Gagal mengirim review"
+                    )
+                }
+            }
         }
     }
 }

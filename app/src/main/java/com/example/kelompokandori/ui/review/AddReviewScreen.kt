@@ -17,10 +17,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+
 
 @Composable
-fun AddReviewScreen() {
-
+fun AddReviewScreen(
+    onSuccess: (Float, String) -> Unit
+) {
     val application = LocalContext.current.applicationContext as Application
 
     val viewModel: AddReviewViewModel = viewModel(
@@ -38,10 +42,24 @@ fun AddReviewScreen() {
             viewModel.setMedia(it, MediaType.IMAGE)
         }
 
+    val overall =
+        (state.kebersihan + state.pelayanan +
+                state.lokasi + state.kenyamanan) / 4f
+
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            onSuccess(overall, state.pengalaman)
+        }
+    }
+
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()) // 👈 DI SINI
+            .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    )
+    {
 
         Text("Review Penginapan", style = MaterialTheme.typography.headlineSmall)
 
@@ -60,10 +78,6 @@ fun AddReviewScreen() {
         RatingRow("Kenyamanan", state.kenyamanan) {
             viewModel.setRating(RatingType.KENYAMANAN, it)
         }
-
-        val overall =
-            (state.kebersihan + state.pelayanan +
-                    state.lokasi + state.kenyamanan) / 4f
 
         Text("Rating Keseluruhan: ${"%.1f".format(overall)} ⭐")
 
@@ -88,14 +102,6 @@ fun AddReviewScreen() {
             )
         }
 
-        if (state.isSuccess) {
-            Text(
-                text = "Review berhasil dikirim 🎉",
-                color = Color(0xFF9AA9E3)
-
-            )
-        }
-
         Button(
             onClick = viewModel::submitReview,
             enabled = !state.isSubmitting,
@@ -117,34 +123,36 @@ fun AddReviewScreen() {
 fun RatingRow(
     title: String,
     rating: Int,
-    onRate: (Int) -> Unit
+    onRatingSelected: (Int) -> Unit
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(title, modifier = Modifier.weight(1f))
+    Column {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
 
         Row {
             for (i in 1..5) {
+
                 val isSelected = i <= rating
 
                 Icon(
-                    imageVector = if (isSelected)
-                        Icons.Filled.Star
-                    else
-                        Icons.Outlined.Star,
+                    imageVector =
+                        if (isSelected) Icons.Filled.Star else Icons.Outlined.Star,
                     contentDescription = null,
                     tint = if (isSelected)
-                        Color(0xFFFFC107) // ⭐ kuning
+                        Color(0xFFFFC107)
                     else
-                        Color.Gray,      // ☆ abu-abu
+                        Color.Gray,
                     modifier = Modifier
-                        .size(28.dp)
-                        .clickable { onRate(i) }
+                        .size(32.dp)
+                        .clickable {
+                            onRatingSelected(i)
+                        }
                 )
             }
         }
     }
 }
-
