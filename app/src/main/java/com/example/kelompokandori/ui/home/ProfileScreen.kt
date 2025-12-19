@@ -28,15 +28,6 @@ import coil.compose.AsyncImage
 import com.example.kelompokandori.MainActivity
 import com.example.kelompokandori.model.ProfileViewModel
 
-class ProfileScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ProfileScreen()
-        }
-    }
-}
-
 @Composable
 fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
     val context = LocalContext.current
