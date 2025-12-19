@@ -17,7 +17,13 @@ import com.example.kelompokandori.ui.review.AddReviewScreen
 import com.example.kelompokandori.ui.review.ReviewSummaryScreen
 import com.example.kelompokandori.ui.trip.AddTripActivity
 import com.example.kelompokandori.ui.trip.TripListScreen
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
+// --------------------
+// Bottom Navigation Item
+// --------------------
 sealed class BottomNavItem(
     val route: String,
     val title: String,
@@ -51,12 +57,8 @@ fun MainScreen(onLogout: () -> Unit) {
 
                 items.forEach { item ->
                     NavigationBarItem(
-                        icon = {
-                            Icon(item.icon, contentDescription = item.title)
-                        },
-                        label = {
-                            Text(item.title)
-                        },
+                        icon = { Icon(item.icon, contentDescription = item.title) },
+                        label = { Text(item.title) },
                         selected = currentRoute == item.route,
                         onClick = {
                             navController.navigate(item.route) {
@@ -79,6 +81,9 @@ fun MainScreen(onLogout: () -> Unit) {
             modifier = Modifier.padding(innerPadding)
         ) {
 
+            // --------------------
+            // Trip
+            // --------------------
             composable(BottomNavItem.Trip.route) {
                 TripListScreen(
                     onNavigateToAdd = {
@@ -94,16 +99,34 @@ fun MainScreen(onLogout: () -> Unit) {
 
             composable(BottomNavItem.Review.route) {
                 AddReviewScreen(
-                    onSuccess = { rating, comment ->
+                    onSuccess = { rating, comment, mediaUrl ->
+
+                        val safeComment =
+                            URLEncoder.encode(
+                                comment,
+                                StandardCharsets.UTF_8.toString()
+                            )
+
+                        val safeMediaUrl =
+                            mediaUrl?.let {
+                                URLEncoder.encode(
+                                    it,
+                                    StandardCharsets.UTF_8.toString()
+                                )
+                            } ?: "null"
+
                         navController.navigate(
-                            "review_summary/$rating/$comment"
+                            "review_summary/$rating/$safeComment/$safeMediaUrl"
                         )
                     }
                 )
             }
 
+            // --------------------
+            // Review Summary
+            // --------------------
             composable(
-                route = "review_summary/{rating}/{comment}"
+                route = "review_summary/{rating}/{comment}/{mediaUrl}"
             ) { backStackEntry ->
 
                 val rating =
@@ -111,17 +134,38 @@ fun MainScreen(onLogout: () -> Unit) {
                         ?.getString("rating")
                         ?.toFloat() ?: 0f
 
+                val encodedComment =
+                    backStackEntry.arguments?.getString("comment")
+
                 val comment =
-                    backStackEntry.arguments
-                        ?.getString("comment")
-                        ?: ""
+                    if (encodedComment != null)
+                        URLDecoder.decode(
+                            encodedComment,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                    else ""
+
+                val encodedMediaUrl =
+                    backStackEntry.arguments?.getString("mediaUrl")
+
+                val mediaUrl =
+                    if (encodedMediaUrl != null && encodedMediaUrl != "null")
+                        URLDecoder.decode(
+                            encodedMediaUrl,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                    else null
 
                 ReviewSummaryScreen(
                     rating = rating,
-                    comment = comment
+                    comment = comment,
+                    mediaUrl = mediaUrl
                 )
             }
 
+            // --------------------
+            // Others
+            // --------------------
             composable(BottomNavItem.Article.route) {
                 ArticleListScreen()
             }

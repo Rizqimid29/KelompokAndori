@@ -1,10 +1,13 @@
 package com.example.kelompokandori.ui.review
 
 import android.app.Application
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
@@ -12,18 +15,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-
+import coil.compose.AsyncImage
 
 @Composable
 fun AddReviewScreen(
-    onSuccess: (Float, String) -> Unit
+    onSuccess: (Float, String, String?) -> Unit
 ) {
     val application = LocalContext.current.applicationContext as Application
 
@@ -48,18 +50,21 @@ fun AddReviewScreen(
 
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
-            onSuccess(overall, state.pengalaman)
+            onSuccess(
+                overall,
+                state.pengalaman,
+                state.mediaUrl
+            )
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()) // 👈 DI SINI
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
-    )
-    {
+    ) {
 
         Text("Review Penginapan", style = MaterialTheme.typography.headlineSmall)
 
@@ -87,6 +92,20 @@ fun AddReviewScreen(
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text("Ceritakan pengalaman Anda…") }
         )
+
+        // =========================
+        // 🔥 PREVIEW GAMBAR (INI INTINYA)
+        // =========================
+        if (state.mediaUri != null) {
+            AsyncImage(
+                model = state.mediaUri,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Crop
+            )
+        }
 
         OutlinedButton(
             onClick = { imagePicker.launch("image/*") },
@@ -119,6 +138,7 @@ fun AddReviewScreen(
     }
 }
 
+
 @Composable
 fun RatingRow(
     title: String,
@@ -126,26 +146,26 @@ fun RatingRow(
     onRatingSelected: (Int) -> Unit
 ) {
     Column {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Text(text = title)
 
         Spacer(modifier = Modifier.height(4.dp))
 
         Row {
             for (i in 1..5) {
-
-                val isSelected = i <= rating
+                val selected = i <= rating
 
                 Icon(
                     imageVector =
-                        if (isSelected) Icons.Filled.Star else Icons.Outlined.Star,
+                        if (selected)
+                            Icons.Filled.Star
+                        else
+                            Icons.Outlined.Star,
                     contentDescription = null,
-                    tint = if (isSelected)
-                        Color(0xFFFFC107)
-                    else
-                        Color.Gray,
+                    tint =
+                        if (selected)
+                            Color(0xFFFFC107)
+                        else
+                            Color.Gray,
                     modifier = Modifier
                         .size(32.dp)
                         .clickable {

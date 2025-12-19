@@ -9,9 +9,13 @@ data class AddReviewUiState(
     val kenyamanan: Int = 0,
     val pengalaman: String = "",
     val tipeTrip: String? = null,
+
     val mediaUri: Uri? = null,
+    val mediaUrl: String? = null,
     val mediaType: MediaType? = null,
+
     val isSubmitting: Boolean = false,
-    val errorMessage: String? = null,
-    val isSuccess: Boolean = false
+    val isSuccess: Boolean = false,
+    val errorMessage: String? = null
 )
+

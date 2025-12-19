@@ -22,7 +22,7 @@ class AddReviewRepository(
         tipeTrip: String?,
         mediaUri: Uri?,
         mediaType: String?
-    ) {
+    ): String? {   // 🔥 WAJIB RETURN
 
         val userId = client.auth.currentUserOrNull()?.id
             ?: throw Exception("User belum login")
@@ -37,17 +37,14 @@ class AddReviewRepository(
             val bytes = context.contentResolver
                 .openInputStream(mediaUri)
                 ?.readBytes()
-                ?: throw Exception("Gagal membaca media")
+                ?: throw Exception("Gagal membaca file")
 
             val ext = if (mediaType == "VIDEO") "mp4" else "jpg"
             val path = "reviews/${System.currentTimeMillis()}.$ext"
 
             client.storage
                 .from("review-media")
-                .upload(
-                    path = path,
-                    data = bytes
-                )
+                .upload(path, bytes)
 
             mediaUrl = client.storage
                 .from("review-media")
@@ -68,5 +65,8 @@ class AddReviewRepository(
         )
 
         client.postgrest["reviews"].insert(review)
+
+
+        return mediaUrl
     }
 }

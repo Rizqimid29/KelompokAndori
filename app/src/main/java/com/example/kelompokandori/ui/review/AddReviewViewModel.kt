@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddReviewViewModel(
-    application: Application
-) : AndroidViewModel(application) {
+class AddReviewViewModel(application: Application) :
+    AndroidViewModel(application) {
 
     private val repository = AddReviewRepository(application)
 
@@ -34,44 +33,40 @@ class AddReviewViewModel(
         _uiState.update { it.copy(pengalaman = value) }
     }
 
-    fun setTripType(value: String) {
-        _uiState.update { it.copy(tipeTrip = value) }
-    }
-
     fun setMedia(uri: Uri?, type: MediaType) {
         _uiState.update {
-            it.copy(mediaUri = uri, mediaType = type)
+            it.copy(
+                mediaUri = uri,
+                mediaType = type
+            )
         }
     }
+
 
     fun submitReview() {
         val state = _uiState.value
 
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isSubmitting = true,
-                    errorMessage = null,
-                    isSuccess = false
-                )
-            }
+            _uiState.update { it.copy(isSubmitting = true) }
 
             try {
-                repository.addReview(
-                    kebersihan = state.kebersihan,
-                    pelayanan = state.pelayanan,
-                    lokasi = state.lokasi,
-                    kenyamanan = state.kenyamanan,
-                    pengalaman = state.pengalaman,
-                    tipeTrip = state.tipeTrip,
-                    mediaUri = state.mediaUri,
-                    mediaType = state.mediaType?.name
-                )
+                val uploadedMediaUrl =
+                    repository.addReview(
+                        kebersihan = state.kebersihan,
+                        pelayanan = state.pelayanan,
+                        lokasi = state.lokasi,
+                        kenyamanan = state.kenyamanan,
+                        pengalaman = state.pengalaman,
+                        tipeTrip = state.tipeTrip,
+                        mediaUri = state.mediaUri,
+                        mediaType = state.mediaType?.name
+                    )
 
                 _uiState.update {
                     it.copy(
                         isSubmitting = false,
-                        isSuccess = true
+                        isSuccess = true,
+                        mediaUrl = uploadedMediaUrl
                     )
                 }
 
@@ -79,7 +74,7 @@ class AddReviewViewModel(
                 _uiState.update {
                     it.copy(
                         isSubmitting = false,
-                        errorMessage = e.message ?: "Gagal mengirim review"
+                        errorMessage = e.message
                     )
                 }
             }
