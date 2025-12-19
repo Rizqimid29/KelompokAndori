@@ -37,7 +37,6 @@ fun TripCard(
 
             Column(modifier = Modifier.padding(16.dp)) {
 
-                // Gambar
                 if (trip.imageUrl != null) {
                     AsyncImage(
                         model = trip.imageUrl,

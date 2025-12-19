@@ -3,7 +3,7 @@ package com.example.kelompokandori.data
 import com.example.kelompokandori.SupabaseClient
 import com.example.kelompokandori.model.DiscussionComment
 import com.example.kelompokandori.model.Discussion
-import com.example.kelompokandori.ui.home.UserProfile
+import com.example.kelompokandori.model.Profile
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Order
@@ -12,7 +12,7 @@ import kotlinx.datetime.Clock
 
 class DiscussionRepository {
 
-    private suspend fun getCurrentUserProfile(): UserProfile {
+    private suspend fun getCurrentUserProfile(): Profile {
         val currentUser = SupabaseClient.client.auth.currentUserOrNull() ?: throw Exception("Login required")
         return SupabaseClient.client.from("profiles")
             .select { filter { eq("id", currentUser.id) } }

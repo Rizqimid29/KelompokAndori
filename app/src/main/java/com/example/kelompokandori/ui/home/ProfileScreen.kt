@@ -23,85 +23,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.kelompokandori.MainActivity
-import com.example.kelompokandori.SupabaseClient
-import com.example.kelompokandori.ui.article.ArticleListActivity
-import com.example.kelompokandori.ui.trip.TripActivity
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.postgrest.from
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.example.kelompokandori.model.ProfileViewModel
 
-@Serializable
-data class UserProfile(
-    val id: String,
-    @SerialName("full_name") val fullName: String?,
-    @SerialName("avatar_url") val avatarUrl: String?
-)
-
-class ProfileViewModel : ViewModel() {
-
-    private val _userProfile = MutableStateFlow<UserProfile?>(null)
-    val userProfile = _userProfile.asStateFlow()
-
-    private val _email = MutableStateFlow<String>("")
-    val email = _email.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading = _isLoading.asStateFlow()
-
-    init {
-        loadProfile()
-    }
-
-    private fun loadProfile() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val currentUser = SupabaseClient.client.auth.currentUserOrNull()
-
-                if (currentUser != null) {
-                    _email.value = currentUser.email ?: "No Email"
-
-                    val profileData = SupabaseClient.client.from("profiles")
-                        .select {
-                            filter {
-                                eq("id", currentUser.id)
-                            }
-                        }
-                        .decodeSingleOrNull<UserProfile>()
-
-                    _userProfile.value = profileData
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
-
-    fun logout(onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            try {
-                SupabaseClient.client.auth.signOut()
-                onSuccess()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-}
-
-class Profile : ComponentActivity() {
+class ProfileScreen : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -157,7 +84,6 @@ fun ProfileScreen(viewModel: ProfileViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- DATA DIRI ---
             ProfileInfoItem(
                 icon = Icons.Default.Person,
                 label = "Nama Lengkap",
